@@ -1,7 +1,7 @@
 # Mandelnaut Unity Project Makefile
 # Comprehensive build and test automation for Unity 3D fractal exploration project
 
-.PHONY: help unit integration test test-results test-log clean-tests build clean setup
+.PHONY: help unit integration test test-results test-log clean-tests build clean setup init packages packages-update packages-clean
 
 # Unity Configuration
 UNITY_PATH ?= /Applications/Unity/Hub/Editor/2021.3.16f1/Unity.app/Contents/MacOS/Unity
@@ -33,6 +33,10 @@ help:
 	@echo "  $(GREEN)clean$(NC)       - Clean build artifacts"
 	@echo "  $(GREEN)clean-tests$(NC) - Clean test artifacts"
 	@echo "  $(GREEN)setup$(NC)       - Setup development environment"
+	@echo "  $(GREEN)init$(NC)        - Initialize project with package management"
+	@echo "  $(GREEN)packages$(NC)    - Validate package installation"
+	@echo "  $(GREEN)packages-update$(NC) - Update Unity packages"
+	@echo "  $(GREEN)packages-clean$(NC) - Clean package cache"
 	@echo ""
 	@echo "$(YELLOW)Configuration:$(NC)"
 	@echo "  UNITY_PATH: $(UNITY_PATH)"
@@ -229,6 +233,80 @@ setup:
 	@echo ""
 	@echo "$(YELLOW)Environment setup complete.$(NC)"
 	@echo "$(BLUE)🎮 Ready for development and testing!$(NC)"
+
+# Initialize Unity project with package management
+init:
+	@echo "$(BLUE)🔧 Initializing Unity project with package management...$(NC)"
+	@echo ""
+
+	@if [ ! -d "Packages" ]; then \
+		mkdir -p Packages; \
+		echo "$(GREEN)✅ Created Packages directory$(NC)"; \
+	fi
+
+	@if [ ! -f "Packages/manifest.json" ]; then \
+		echo '{\n  "dependencies": {\n    "com.unity.test-framework": "1.1.33",\n    "com.unity.mathematics": "1.2.6",\n    "com.unity.burst": "1.8.4",\n    "com.unity.collections": "1.2.4",\n    "com.unity.jobs": "0.70.0-preview.7"\n  },\n  "scopedRegistries": [],\n  "testables": [\n    "com.unity.test-framework"\n  ]\n}' > Packages/manifest.json; \
+		echo "$(GREEN)✅ Created manifest.json with essential packages$(NC)"; \
+	else \
+		echo "$(YELLOW)ℹ️  manifest.json already exists$(NC)"; \
+	fi
+
+	@echo ""
+	@echo "$(GREEN)🎉 Unity project initialized!$(NC)"
+	@echo ""
+	@echo "$(YELLOW)📦 Essential packages configured:$(NC)"
+	@echo "   • Unity Test Framework (for our unit tests)"
+	@echo "   • Unity Mathematics (optimized math operations)"
+	@echo "   • Unity Burst (high-performance compilation)"
+	@echo "   • Unity Collections (efficient data structures)"
+	@echo "   • Unity Jobs (multithreaded processing)"
+	@echo ""
+	@echo "$(BLUE)🚀 Next steps:$(NC)"
+	@echo "   1. Open project in Unity Editor"
+	@echo "   2. Unity will automatically download and install packages"
+	@echo "   3. Run 'make unit' to test our MandelbulbMath functions"
+
+# Validate package installation
+packages:
+	@echo "$(BLUE)📦 Validating Unity package installation...$(NC)"
+	@echo ""
+
+	@if [ ! -f "Packages/manifest.json" ]; then \
+		echo "$(RED)❌ manifest.json not found$(NC)"; \
+		echo "$(YELLOW)💡 Run 'make init' first$(NC)"; \
+		exit 1; \
+	fi
+
+	@echo "$(GREEN)✅ manifest.json found$(NC)"
+	@echo "$(YELLOW)📋 Configured packages:$(NC)"
+	@grep '"com\.' Packages/manifest.json | sed 's/.*"com\./   • com./' | sed 's/".*//' || echo "   No packages found"
+
+	@echo ""
+	@echo "$(BLUE)ℹ️  Package validation complete$(NC)"
+	@echo "$(YELLOW)Note: Full validation requires Unity Editor$(NC)"
+
+# Update packages (requires Unity Editor)
+packages-update:
+	@echo "$(BLUE)🔄 Updating Unity packages...$(NC)"
+	@echo ""
+	@echo "$(YELLOW)⚠️  Package updates require Unity Editor$(NC)"
+	@echo "   1. Open project in Unity"
+	@echo "   2. Go to Window → Package Manager"
+	@echo "   3. Check for updates and install"
+	@echo ""
+	@echo "$(BLUE)Alternative: Modify Packages/manifest.json versions manually$(NC)"
+
+# Clean package cache (Unity-specific)
+packages-clean:
+	@echo "$(BLUE)🧹 Cleaning Unity package cache...$(NC)"
+	@echo ""
+	@echo "$(YELLOW)⚠️  This requires Unity Editor$(NC)"
+	@echo "   1. Close Unity Editor"
+	@echo "   2. Delete Library/ and Temp/ directories"
+	@echo "   3. Reopen project to rebuild cache"
+	@echo ""
+	@echo "$(BLUE)Manual cleanup:$(NC)"
+	@echo "   rm -rf Library/ Temp/ Logs/"
 
 # Default target
 .DEFAULT_GOAL := help
