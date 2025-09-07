@@ -1,0 +1,5 @@
+// TODO: prefab with camera and Explorer component
+// This prefab should contain:
+// - Main Camera
+// - Explorer script component
+// - Any necessary child objects for fractal exploration

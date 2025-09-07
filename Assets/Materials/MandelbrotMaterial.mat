@@ -1,0 +1,2 @@
+// TODO: link compute shader to material
+// This material should use the MandelbrotRaymarch or MandelbrotVoxel compute shader

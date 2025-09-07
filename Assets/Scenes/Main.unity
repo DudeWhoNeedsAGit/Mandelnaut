@@ -1,0 +1,5 @@
+// TODO: main scene with camera, light, Explorer prefab
+// This scene should contain:
+// - Explorer prefab instance
+// - Directional light for scene lighting
+// - Any necessary scene setup for fractal exploration

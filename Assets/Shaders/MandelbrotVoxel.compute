@@ -1,0 +1,12 @@
+// TODO: implement voxel-based compute shader for 3D Mandelbrot
+
+#pragma kernel CSMain
+
+RWTexture3D<float4> Result;
+
+[numthreads(8,8,8)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    // TODO: implement voxel-based algorithm for 3D Mandelbrot set
+    Result[id] = float4(0.5, 0.5, 0.5, 1.0);
+}
