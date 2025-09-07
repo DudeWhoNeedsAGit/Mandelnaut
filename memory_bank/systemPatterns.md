@@ -120,3 +120,83 @@ Mandelnaut/
 - **Stability**: <5 crashes per hour of gameplay
 - **Usability**: <5 minute learning curve for basic navigation
 - **Code Quality**: >80% test coverage for core mathematical functions
+
+# Unity Package Manager
+
+## Overview
+Unity Package Manager (UPM) is Unity's built-in package management system that handles dependencies, versions, and package resolution automatically.
+
+## Key Differences from Python pip
+- **No manual installation**: Packages install automatically when opening project
+- **No virtual environments**: Unity manages package isolation internally
+- **Automatic resolution**: No manual dependency conflict resolution needed
+- **Visual management**: Package Manager window in Unity Editor
+- **Scoped registries**: Support for private and custom package sources
+
+## Package Structure
+```
+Packages/
+├── manifest.json          # Dependencies and configuration
+└── packages-lock.json     # Auto-generated lock file
+```
+
+## Essential Packages for Mandelnaut
+```json
+{
+  "dependencies": {
+    "com.unity.test-framework": "1.1.33",    // Unit testing framework
+    "com.unity.mathematics": "1.2.6",       // High-performance math
+    "com.unity.burst": "1.8.4",             // Compiler optimization
+    "com.unity.collections": "1.2.4",       // Efficient data structures
+    "com.unity.jobs": "0.70.0-preview.7"    // Multithreaded processing
+  },
+  "scopedRegistries": [],
+  "testables": ["com.unity.test-framework"]
+}
+```
+
+## Makefile Integration
+```makefile
+# Initialize project with packages
+init:
+	@echo "🔧 Initializing Unity project with package management..."
+	@if [ ! -d "Packages" ]; then mkdir -p Packages; fi
+	@if [ ! -f "Packages/manifest.json" ]; then \
+		echo '{"dependencies": {...}}' > Packages/manifest.json; \
+	fi
+
+# Validate package installation
+packages:
+	@echo "📦 Validating Unity package installation..."
+	@grep '"com\.' Packages/manifest.json | sed 's/.*"com\./   • com./'
+
+# Update packages (requires Unity Editor)
+packages-update:
+	@echo "⚠️  Package updates require Unity Editor"
+
+# Clean package cache
+packages-clean:
+	@echo "🧹 Cleaning Unity package cache..."
+	@echo "⚠️  Requires Unity Editor: Delete Library/ and Temp/ directories"
+```
+
+## Workflow
+1. **Setup**: Run `make init` to create package structure
+2. **Installation**: Open project in Unity (packages download automatically)
+3. **Management**: Use Unity Editor Package Manager window
+4. **Updates**: Check for updates in Package Manager UI
+5. **Validation**: Run `make packages` to verify configuration
+
+## Benefits for Mandelnaut
+- **Test Framework**: Automated testing of mathematical functions
+- **Performance**: Burst compilation for fractal generation
+- **Mathematics**: Optimized vector/matrix operations
+- **Collections**: Efficient 3D data structures for voxels
+- **Jobs**: Multithreaded fractal computation
+
+## Best Practices
+- Keep manifest.json in version control
+- Use specific version numbers for stability
+- Test package compatibility before major updates
+- Document package purposes in code comments
+- Use scoped registries for custom packages
