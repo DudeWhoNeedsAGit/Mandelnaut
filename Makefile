@@ -48,7 +48,7 @@ help:
 	@echo "  make UNITY_PATH=/path/to/unity unit  # Custom Unity path"
 
 # Unit Tests (EditMode) - Our MandelbulbMath tests
-unit:
+unit: check-packages
 	@echo "$(BLUE)🧪 Running Unity Unit Tests (EditMode)...$(NC)"
 	@echo "Testing: MandelbulbMathTests"
 	@echo "Unity Path: $(UNITY_PATH)"
@@ -79,8 +79,29 @@ unit:
 	@echo "$(BLUE)Test execution completed.$(NC)"
 	$(MAKE) test-results
 
+# Check if packages are installed before running tests
+check-packages:
+	@echo "$(BLUE)📦 Checking package installation status...$(NC)"
+
+	@if [ ! -d "Library/PackageCache" ] && [ ! -d "Library/ScriptAssemblies" ]; then \
+		echo "$(RED)❌ Unity packages not installed!$(NC)"; \
+		echo ""; \
+		echo "$(YELLOW)💡 Required setup:$(NC)"; \
+		echo "   1. Run: $(GREEN)make init$(NC) (if not done already)"; \
+		echo "   2. $(YELLOW)Open project in Unity Editor$(NC)"; \
+		echo "   3. $(YELLOW)Wait for packages to download & install$(NC)"; \
+		echo "   4. $(YELLOW)Close Unity Editor$(NC)"; \
+		echo "   5. $(GREEN)Run 'make unit' again$(NC)"; \
+		echo ""; \
+		echo "$(BLUE)Note: Unity CLI cannot download packages - Unity Editor required$(NC)"; \
+		exit 1; \
+	fi
+
+	@echo "$(GREEN)✅ Unity packages appear to be installed$(NC)"
+	@echo ""
+
 # Integration Tests (PlayMode)
-integration:
+integration: check-packages
 	@echo "$(BLUE)🔗 Running Unity Integration Tests (PlayMode)...$(NC)"
 	@echo "Unity Path: $(UNITY_PATH)"
 	@echo "Project Path: $(PROJECT_PATH)"
@@ -254,17 +275,23 @@ init:
 	@echo ""
 	@echo "$(GREEN)🎉 Unity project initialized!$(NC)"
 	@echo ""
-	@echo "$(YELLOW)📦 Essential packages configured:$(NC)"
-	@echo "   • Unity Test Framework (for our unit tests)"
-	@echo "   • Unity Mathematics (optimized math operations)"
-	@echo "   • Unity Burst (high-performance compilation)"
-	@echo "   • Unity Collections (efficient data structures)"
-	@echo "   • Unity Jobs (multithreaded processing)"
+	@echo "$(YELLOW)📦 What make init accomplished:$(NC)"
+	@echo "   ✅ Created Packages/ directory"
+	@echo "   ✅ Created manifest.json with essential packages:"
+	@echo "      • Unity Test Framework (for unit tests)"
+	@echo "      • Unity Mathematics (optimized math operations)"
+	@echo "      • Unity Burst (high-performance compilation)"
+	@echo "      • Unity Collections (efficient data structures)"
+	@echo "      • Unity Jobs (multithreaded processing)"
+	@echo "   ✅ Project structure ready for Unity"
 	@echo ""
-	@echo "$(BLUE)🚀 Next steps:$(NC)"
-	@echo "   1. Open project in Unity Editor"
-	@echo "   2. Unity will automatically download and install packages"
-	@echo "   3. Run 'make unit' to test our MandelbulbMath functions"
+	@echo "$(BLUE)📦 Required next step (manual):$(NC)"
+	@echo "   1. $(YELLOW)Open project in Unity Editor$(NC) (first time only)"
+	@echo "   2. $(YELLOW)Wait for Unity to download & install packages$(NC)"
+	@echo "   3. $(YELLOW)Close Unity Editor$(NC)"
+	@echo "   4. $(GREEN)Run 'make unit' for CLI testing$(NC)"
+	@echo ""
+	@echo "$(BLUE)💡 Note: Unity CLI cannot download packages - Unity Editor required$(NC)"
 
 # Validate package installation
 packages:
